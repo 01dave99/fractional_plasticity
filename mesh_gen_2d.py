@@ -1,6 +1,6 @@
 from dolfin import *
 from mshr import Polygon, generate_mesh
-import matplotlib.pyplot as plt
+
 
 meshes=[10,20,50,100,150,200,250,300]
 for i in range(len(meshes)):
