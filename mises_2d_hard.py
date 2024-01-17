@@ -68,7 +68,7 @@ elsca=ufl.FiniteElement("DG",ufl.triangle,0)
 V=fem.functionspace(msh, el)
 num_dofs_global = V.dofmap.index_map.size_global * V.dofmap.index_map_bs
 if msh.comm.rank==0:
-	print(num_dofs_global)
+	print(num_dofs_global,flush=True)
 Vstr=fem.functionspace(msh,elstr)
 Vsca=fem.functionspace(msh,elsca)
 
