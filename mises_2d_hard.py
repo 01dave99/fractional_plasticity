@@ -54,7 +54,7 @@ def eval_S(sigma_tr,chi1,gamma):
 #Finite Element specifications:
 
 #mesh
-with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_7.xdmf", "r") as xdmf:
+with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_11.xdmf", "r") as xdmf:
     msh = xdmf.read_mesh()
 #msh = mesh.create_rectangle(comm=MPI.COMM_WORLD,
                             #points=((0.0, 0.0), (5.0, 1.0)), n=(64, 64),
