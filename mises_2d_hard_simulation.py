@@ -139,7 +139,7 @@ for mshi in range(9,11):
 					rvec=fem.petsc.assemble_vector(fem.form(r))
 					rvec.ghostUpdate(addv=PETSc.InsertMode.ADD, mode=PETSc.ScatterMode.REVERSE)
 					fem.petsc.set_bc(rvec,bcs=[bc])
-					res=rvec.norm()
+					res=rvec.norm(norm_type=3)
 					rvec.destroy()
 					if msh.comm.rank==0:
 						print("Residual norm: "+str(res),flush=True)
@@ -193,7 +193,7 @@ for mshi in range(9,11):
 				rvec=fem.petsc.assemble_vector(fem.form(r))
 				rvec.ghostUpdate(addv=PETSc.InsertMode.ADD, mode=PETSc.ScatterMode.REVERSE)
 				fem.petsc.set_bc(rvec,bcs=[bc])
-				res=rvec.norm()
+				res=rvec.norm(norm_type=3)
 				rvec.destroy()
 				if msh.comm.rank==0:
 					print("Residual norm: "+str(res),flush=True)
