@@ -89,6 +89,8 @@ facet_tag = mesh.meshtags(msh, msh.topology.dim - 1, facet_indices[sorted_facets
 
 #functions:
 for steps in steps1:
+	if msh.comm.rank==0:
+		print("Steps: "+str(steps),flush=True)
 	t1vec=np.zeros(steps)
 	for i in range(steps):
 		t1vec[i]=-abs(2*tmax*(i+1)/steps-tmax)+tmax
@@ -237,9 +239,9 @@ for steps in steps1:
 		cells=cells[0]
 		ydefl=uh.eval(((2.5,0.25,0)),cells)[1]
 		print("Deflection: "+str(ydefl),flush=True)
-		with open("defl_t"+str(steps)+".txt", 'w') as wfile:
+		with open("results/defl_t"+str(steps)+".txt", 'w') as wfile:
 			wfile.write("\n"+str(ydefl))	
 
 	if msh.comm.rank==0:
-		np.savetxt("res_t"+str(steps)+".csv",residuals,delimiter=",")
+		np.savetxt("results/res_t"+str(steps)+".csv",residuals,delimiter=",")
 		

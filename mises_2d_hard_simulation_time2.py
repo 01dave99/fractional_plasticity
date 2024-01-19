@@ -89,6 +89,8 @@ facet_tag = mesh.meshtags(msh, msh.topology.dim - 1, facet_indices[sorted_facets
 
 #functions:
 for steps in steps1:
+	if msh.comm.rank==0:
+		print("Steps: "+str(steps),flush=True)
 	t1vec=np.zeros(steps)
 	for i in range(steps):
 		t1vec[i]=-abs(2*tmax*(i+1)/steps-tmax)+tmax
