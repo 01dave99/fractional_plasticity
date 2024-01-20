@@ -19,7 +19,7 @@ kappa=12070
 k1=10000
 k2=1000
 tmax=15000
-steps=400
+steps=200
 eps=math.pow(10,-8)
 
 
@@ -53,7 +53,7 @@ def eval_S(sigma_tr,chi1,gamma):
 
 #Finite Element specifications:
 
-for mshi in range(4,7):
+for mshi in range(5,7):
 	#mesh
 	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh3d_"+str(mshi)+".xdmf", "r") as xdmf:
 	    msh = xdmf.read_mesh()
@@ -84,6 +84,11 @@ for mshi in range(4,7):
 	facet_markers = np.hstack(facet_markers).astype(np.int32)
 	sorted_facets = np.argsort(facet_indices)
 	facet_tag = mesh.meshtags(msh, msh.topology.dim - 1, facet_indices[sorted_facets], facet_markers[sorted_facets])
+
+	#msh.topology.create_connectivity(msh.topology.dim-1, msh.topology.dim)
+	#with io.XDMFFile(msh.comm, "facet_tags.xdmf", "w") as xdmf:
+    #		xdmf.write_mesh(msh)
+    #		xdmf.write_meshtags(facet_tag, msh.geometry)
 	#functions:
 	x = ufl.SpatialCoordinate(msh)
 
