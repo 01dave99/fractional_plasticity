@@ -53,7 +53,7 @@ def eval_S(sigma_tr,chi1,gamma):
 
 #Finite Element specifications:
 
-for mshi in range(5,7):
+for mshi in range(3,5):
 	#mesh
 	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh3d_"+str(mshi)+".xdmf", "r") as xdmf:
 	    msh = xdmf.read_mesh()
