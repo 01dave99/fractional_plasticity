@@ -55,7 +55,7 @@ def eval_S(sigma_tr,chi1,gamma):
 
 for mshi in range(7):
 	#mesh
-	with io.XDMFFile(MPI.COMM_WORLD, "mesh3d_3.xdmf", "r") as xdmf:
+	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh3d_3.xdmf", "r") as xdmf:
 	    msh = xdmf.read_mesh()
 	#bb_tree = geometry.bb_tree(msh, msh.topology.dim)
 	#function space:                         
@@ -232,4 +232,4 @@ for mshi in range(7):
 			#	file.write_function(uh[ti])
 
 	if msh.comm.rank==0:
-		np.savetxt("res3d_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
+		np.savetxt("results/res3d_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
