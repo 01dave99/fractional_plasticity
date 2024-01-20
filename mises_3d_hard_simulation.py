@@ -55,7 +55,7 @@ def eval_S(sigma_tr,chi1,gamma):
 
 for mshi in range(7):
 	#mesh
-	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh3d_3.xdmf", "r") as xdmf:
+	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh3d_"+str(mshi)+".xdmf", "r") as xdmf:
 	    msh = xdmf.read_mesh()
 	#bb_tree = geometry.bb_tree(msh, msh.topology.dim)
 	#function space:                         
