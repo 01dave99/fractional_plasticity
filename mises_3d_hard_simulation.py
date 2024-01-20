@@ -19,7 +19,7 @@ kappa=12070
 k1=10000
 k2=1000
 tmax=15000
-steps=200
+steps=400
 eps=math.pow(10,-8)
 
 
