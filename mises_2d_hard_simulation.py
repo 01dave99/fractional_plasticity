@@ -16,8 +16,8 @@ dim=2
 y0=10000
 mu=55000
 kappa=120000
-k1=10000
-k2=1000
+k1=60000
+k2=60000
 tmax=15000
 steps=200
 eps=math.pow(10,-8)
@@ -52,7 +52,7 @@ def eval_S(sigma_tr,chi1,gamma):
 
 
 #Finite Element specifications:
-for mshi in range(6,9):
+for mshi in range(0,12):
 	#mesh
 
 	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_"+str(mshi)+".xdmf", "r") as xdmf:
