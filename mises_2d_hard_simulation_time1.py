@@ -15,7 +15,7 @@ from petsc4py import PETSc
 dim=2
 y0=10000
 mu=55000
-kappa=12070
+kappa=120000
 k1=10000
 k2=1000
 tmax=15000

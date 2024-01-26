@@ -15,7 +15,7 @@ from petsc4py import PETSc
 dim=3
 y0=10000
 mu=55000
-kappa=12070
+kappa=120000
 k1=10000
 k2=1000
 tmax=15000
@@ -54,7 +54,7 @@ def eval_S(sigma_tr,chi1,gamma):
 #Finite Element specifications:
 
 #mesh
-with io.XDMFFile(MPI.COMM_WORLD, "mesh3d.xdmf", "r") as xdmf:
+with io.XDMFFile(MPI.COMM_WORLD, "mesh3d_3.xdmf", "r") as xdmf:
     msh = xdmf.read_mesh()
 #bb_tree = geometry.bb_tree(msh, msh.topology.dim)
 #function space:                         

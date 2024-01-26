@@ -15,7 +15,7 @@ from petsc4py import PETSc
 dim=2
 y0=10000
 mu=55000
-kappa=12070
+kappa=120000
 k1=10000
 k2=1000
 tmax=15000
@@ -54,7 +54,7 @@ def eval_S(sigma_tr,chi1,gamma):
 #Finite Element specifications:
 
 #mesh
-with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_11.xdmf", "r") as xdmf:
+with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_4.xdmf", "r") as xdmf:
     msh = xdmf.read_mesh()
 #msh = mesh.create_rectangle(comm=MPI.COMM_WORLD,
                             #points=((0.0, 0.0), (5.0, 1.0)), n=(64, 64),
@@ -230,16 +230,16 @@ for ti in time:
 			file.write_function(uh)
 
 #evalute deflection in the middle of narrow part
-cells=[]
-cell_candidates=geometry.compute_collisions_points(bb_tree,((2.5,0.25,0)))
-cells=geometry.compute_colliding_cells(msh,cell_candidates,((2.5,0.25,0)))
-if len(cells)>0:
-	cells=cells[0]
-	ydefl=uh.eval(((2.5,0.25,0)),cells)[1]
-	print("Deflection: "+str(ydefl),flush=True)
-	with open("defl_"+str(num_dofs_global)+".txt", 'w') as wfile:
-		wfile.write("\n"+str(ydefl))	
+#cells=[]
+#cell_candidates=geometry.compute_collisions_points(bb_tree,((2.5,0.25,0)))
+#cells=geometry.compute_colliding_cells(msh,cell_candidates,((2.5,0.25,0)))
+#if len(cells)>0:
+#	cells=cells[0]
+#	ydefl=uh.eval(((2.5,0.25,0)),cells)[1]
+#	print("Deflection: "+str(ydefl),flush=True)
+#	with open("defl_"+str(num_dofs_global)+".txt", 'w') as wfile:
+#		wfile.write("\n"+str(ydefl))	
 
-if msh.comm.rank==0:
-	np.savetxt("res_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
-	print("DOFs: "+str(num_dofs_global))
+#if msh.comm.rank==0:
+#	np.savetxt("res_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
+#	print("DOFs: "+str(num_dofs_global))
