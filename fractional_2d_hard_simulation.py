@@ -253,9 +253,9 @@ for mshi in range(0,12):
 			chi2.interpolate(chi2exp)
 			sigma_old.interpolate(sigmaexp)
 			
-			with io.XDMFFile(msh.comm, "frac_uh"+str(ti+1)+".xdmf", "w") as file:
-				file.write_mesh(msh)
-				file.write_function(uh)
+			#with io.XDMFFile(msh.comm, "frac_uh"+str(ti+1)+".xdmf", "w") as file:
+			#	file.write_mesh(msh)
+			#	file.write_function(uh)
 
 	#evalute deflection in the middle of narrow part
 	cells=[]
