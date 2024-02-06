@@ -88,7 +88,7 @@ for mshi in range(0,12):
 	V=fem.functionspace(msh, el)
 	num_dofs_global = V.dofmap.index_map.size_global * V.dofmap.index_map_bs
 	if msh.comm.rank==0:
-		print(num_dofs_global,flush=True)
+		print("Loaded mesh "+str(mshi)+" with "+str(num_dofs_global)+" dofs.",flush=True)
 	Vstr=fem.functionspace(msh,elstr)
 	Vsca=fem.functionspace(msh,elsca)
 
