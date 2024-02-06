@@ -265,9 +265,9 @@ for mshi in range(0,12):
 		cells=cells[0]
 		ydefl=uh.eval(((2.5,0.25,0)),cells)[1]
 		print("Deflection: "+str(ydefl),flush=True)
-		with open("frac_defl_"+str(num_dofs_global)+".txt", 'w') as wfile:
+		with open("results/frac_defl_"+str(num_dofs_global)+".txt", 'w') as wfile:
 			wfile.write("\n"+str(ydefl))	
 
 	if msh.comm.rank==0:
-		np.savetxt("frac_res_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
+		np.savetxt("results/frac_res_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
 		print("DOFs: "+str(num_dofs_global))
