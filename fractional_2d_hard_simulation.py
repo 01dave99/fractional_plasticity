@@ -73,7 +73,7 @@ def eval_S(sigma_tr,sigma,chi1,chi2,r):
 #Finite Element specifications:
 
 #mesh
-for mshi in range(0,12):
+for mshi in range(9,12):
 	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_"+str(mshi)+".xdmf", "r") as xdmf:
 	    msh = xdmf.read_mesh()
 	#msh = mesh.create_rectangle(comm=MPI.COMM_WORLD,
