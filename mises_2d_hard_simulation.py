@@ -16,7 +16,7 @@ dim=2
 y0=10000
 mu=55000
 kappa=120000
-k1=60000
+k1=10000
 k2=60000
 tmax=15000
 steps=200
@@ -244,3 +244,7 @@ for mshi in range(0,12):
 	if msh.comm.rank==0:
 		np.savetxt("results/res_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
 		print("DOFs: "+str(num_dofs_global))
+
+	with io.XDMFFile(msh.comm, "results/uh_"+str(num_dofs_global)+"_final.xdmf", "w") as file:
+				file.write_mesh(msh)
+				file.write_function(uh)
