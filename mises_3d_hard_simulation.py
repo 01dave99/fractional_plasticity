@@ -16,7 +16,7 @@ dim=3
 y0=10000
 mu=55000
 kappa=120000
-k1=60000
+k1=10000
 k2=60000
 tmax=15000
 steps=200
@@ -53,7 +53,7 @@ def eval_S(sigma_tr,chi1,gamma):
 
 #Finite Element specifications:
 
-for mshi in range(4,6):
+for mshi in range(0,6):
 	#mesh
 	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh3d_"+str(mshi)+".xdmf", "r") as xdmf:
 	    msh = xdmf.read_mesh()
@@ -176,9 +176,6 @@ for mshi in range(4,6):
 			chi1.interpolate(chi1exp)
 			chi2.interpolate(chi2exp)
 			
-			#with io.XDMFFile(msh.comm, "uh"+str(ti+1)+".xdmf", "w") as file:
-			#	file.write_mesh(msh)
-			#	file.write_function(uh[ti])
 		else:
 
 			ep_old=ep.copy()
@@ -232,9 +229,10 @@ for mshi in range(4,6):
 			chi2.interpolate(chi2exp)
 			
 			
-			#with io.XDMFFile(msh.comm, "uh"+str(ti+1)+".xdmf", "w") as file:
-			#	file.write_mesh(msh)
-			#	file.write_function(uh[ti])
 
 	if msh.comm.rank==0:
 		np.savetxt("results/res3d_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
+
+	with io.XDMFFile(msh.comm, "results/uh_3d_"+str(num_dofs_global)+"_final.xdmf", "w") as file:
+				file.write_mesh(msh)
+				file.write_function(uh)
