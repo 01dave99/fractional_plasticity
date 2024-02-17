@@ -66,7 +66,7 @@ elsca=ufl.FiniteElement("DG",ufl.tetrahedron,0)
 V=fem.functionspace(msh, el)
 num_dofs_global = V.dofmap.index_map.size_global * V.dofmap.index_map_bs
 if MPI.COMM_WORLD.rank==0:
-	print("Loaded Mesh "+str(mshi)+", with "+str(num_dofs_global)+" dofs.",flush=True)
+	print("Loaded Mesh with "+str(num_dofs_global)+" dofs.",flush=True)
 Vstr=fem.functionspace(msh,elstr)
 Vsca=fem.functionspace(msh,elsca)
 
