@@ -258,9 +258,9 @@ for mshi in range(6):
 			#	file.write_function(uh)
 
 	if msh.comm.rank==0:
-		np.savetxt("frac_res3d_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
+		np.savetxt("results/frac_res3d_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
 		print("DOFs: "+str(num_dofs_global))
 
-	with io.XDMFFile(msh.comm, "frac_uh_"+str(num_dofs_global)+".xdmf", "w") as file:
+	with io.XDMFFile(msh.comm, "results/frac_uh3d_"+str(num_dofs_global)+".xdmf", "w") as file:
 				file.write_mesh(msh)
 				file.write_function(uh)
