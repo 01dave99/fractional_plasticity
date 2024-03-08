@@ -65,13 +65,13 @@ for alpha in alphas:
 		return(0.5*(r1+r2))
 
 	def eval_S(sigma_tr,sigma,chi1,chi2,r):
-	i,j,k,l =ufl.indices(4)
-	id4=ufl.as_tensor(ufl.Identity(dim)[i,k]*ufl.Identity(dim)[j,l],(i,j,k,l))
-	ddf=(id4-ufl.outer(ufl.Identity(dim),ufl.Identity(dim))/dim)/ufl.sqrt(ufl.inner(ufl.dev(sigma_tr+chi1),ufl.dev(sigma_tr+chi1)))-ufl.outer(ufl.dev(sigma_tr+chi1),ufl.dev(sigma_tr+chi1))/ufl.sqrt(ufl.inner(ufl.dev(sigma_tr+chi1),ufl.dev(sigma_tr+chi1)))**3
-	ddf_prod=ufl.as_tensor(ddf[i,j,k,l]*(2*mu*r[k,l]+k1*df(sigma,chi1,chi2)[k,l]),(i,j))
-	S2=ufl.outer(C(r),f(sigma_tr,chi1,chi2)*ddf_prod)/(ufl.inner(df(sigma_tr,chi1,chi2),C(r))+k1*ufl.inner(df(sigma_tr,chi1,chi2),df(sigma,chi1,chi2))+k2)**2
-	S=id4-ufl.outer(C(r),df(sigma_tr,chi1,chi2))/(ufl.inner(df(sigma_tr,chi1,chi2),C(r))+k1*ufl.inner(df(sigma_tr,chi1,chi2),df(sigma,chi1,chi2))+k2)+S2
-	return(S)
+		i,j,k,l =ufl.indices(4)
+		id4=ufl.as_tensor(ufl.Identity(dim)[i,k]*ufl.Identity(dim)[j,l],(i,j,k,l))
+		ddf=(id4-ufl.outer(ufl.Identity(dim),ufl.Identity(dim))/dim)/ufl.sqrt(ufl.inner(ufl.dev(sigma_tr+chi1),ufl.dev(sigma_tr+chi1)))-ufl.outer(ufl.dev(sigma_tr+chi1),ufl.dev(sigma_tr+chi1))/ufl.sqrt(ufl.inner(ufl.dev(sigma_tr+chi1),ufl.dev(sigma_tr+chi1)))**3
+		ddf_prod=ufl.as_tensor(ddf[i,j,k,l]*(2*mu*r[k,l]+k1*df(sigma,chi1,chi2)[k,l]),(i,j))
+		S2=ufl.outer(C(r),f(sigma_tr,chi1,chi2)*ddf_prod)/(ufl.inner(df(sigma_tr,chi1,chi2),C(r))+k1*ufl.inner(df(sigma_tr,chi1,chi2),df(sigma,chi1,chi2))+k2)**2
+		S=id4-ufl.outer(C(r),df(sigma_tr,chi1,chi2))/(ufl.inner(df(sigma_tr,chi1,chi2),C(r))+k1*ufl.inner(df(sigma_tr,chi1,chi2),df(sigma,chi1,chi2))+k2)+S2
+		return(S)
 
 	#Finite Element specifications:
 
