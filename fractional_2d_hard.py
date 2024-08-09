@@ -16,10 +16,10 @@ dim=2
 y0=10000
 mu=55000
 kappa=120000
-k1=60000
+k1=10000
 k2=60000
 alpha=0.4
-I=1
+I=np.array([[100,50],[50,200]])
 tmax=15000
 steps=200
 eps=math.pow(10,-8)
@@ -48,21 +48,22 @@ def eval_gamma(sigma_tr,sigma,chi1,chi2,r):
 def eval_r(sigma,chi1,chi2):
 	i,j,k,l,n=ufl.indices(5)
 	ones=ufl.as_tensor([[1 for p in range(dim)] for p in range(dim)])
-	sig1=ufl.as_tensor(ones[i,j]*(sigma[k,l]+chi1[k,l])-I*ufl.Identity(dim)[i,k]*ufl.Identity(dim)[j,l],(i,j,k,l))
+	sig1=ufl.as_tensor([[[[ones[o,p]*(sigma[q,r]+chi1[q,r])-I[o,p]*ufl.Identity(dim)[o,q]*ufl.Identity(dim)[p,r] for r in range(dim)] for q in range(dim)] for p in range(dim)] for o in range(dim)])
 	dev1=ufl.as_tensor(sig1[i,j,k,l]-sig1[i,j,n,n]*ufl.Identity(dim)[k,l]/dim,(i,j,k,l))
-	norm1=ufl.as_tensor([[ufl.sqrt(dev1[o,p,k,l]*dev1[o,p,k,l]) for o in range(dim)] for p in range(dim)])
-	df1=ufl.as_tensor([[dev1[o,p,o,p]/norm1[o,p] for o in range(dim)] for p in range(dim)])
-	ddf1=ufl.as_tensor([[((1-ufl.Identity(dim)[o,p]/dim)/norm1[o,p]-(dev1[o,p,o,p]**2)/norm1[o,p]**3) for o in range(dim)] for p in range(dim)])
+	norm1=ufl.as_tensor([[ufl.sqrt(dev1[o,p,k,l]*dev1[o,p,k,l]) for p in range(dim)] for o in range(dim)])
+	df1=ufl.as_tensor([[dev1[o,p,o,p]/norm1[o,p] for p in range(dim)] for o in range(dim)])
+	ddf1=ufl.as_tensor([[((1-ufl.Identity(dim)[o,p]/dim)/norm1[o,p]-(dev1[o,p,o,p]**2)/norm1[o,p]**3) for p in range(dim)] for o in range(dim)])
 	
-	sig2=ufl.as_tensor(ones[i,j]*(sigma[k,l]+chi1[k,l])+I*ufl.Identity(dim)[i,k]*ufl.Identity(dim)[j,l],(i,j,k,l))
+	sig2=ufl.as_tensor([[[[ones[o,p]*(sigma[q,r]+chi1[q,r])+I[o,p]*ufl.Identity(dim)[o,q]*ufl.Identity(dim)[p,r] for r in range(dim)] for q in range(dim)] for p in range(dim)] for o in range(dim)])
 	dev2=ufl.as_tensor(sig2[i,j,k,l]-sig2[i,j,n,n]*ufl.Identity(dim)[k,l]/dim,(i,j,k,l))
-	norm2=ufl.as_tensor([[ufl.sqrt(dev2[o,p,k,l]*dev2[o,p,k,l]) for o in range(dim)] for p in range(dim)])
-	df2=ufl.as_tensor([[dev2[o,p,o,p]/norm2[o,p] for o in range(dim)] for p in range(dim)])
-	ddf2=ufl.as_tensor([[((1-ufl.Identity(dim)[o,p]/dim)/norm2[o,p]-(dev2[o,p,o,p]**2)/norm2[o,p]**3) for o in range(dim)] for p in range(dim)])
+	norm2=ufl.as_tensor([[ufl.sqrt(dev2[o,p,k,l]*dev2[o,p,k,l]) for p in range(dim)] for o in range(dim)])
+	df2=ufl.as_tensor([[dev2[o,p,o,p]/norm2[o,p] for p in range(dim)] for o in range(dim)])
+	ddf2=ufl.as_tensor([[((1-ufl.Identity(dim)[o,p]/dim)/norm2[o,p]-(dev2[o,p,o,p]**2)/norm2[o,p]**3) for p in range(dim)] for o in range(dim)])
 
-	r1=I**(1-alpha)/scipy.special.gamma(2-alpha)*(df1+I/2*ddf1)
-	r2=I**(1-alpha)/scipy.special.gamma(2-alpha)*(df2-I/2*ddf2)
-	return(0.5*(r1+r2))
+
+	r1=ufl.as_tensor([[I[o,p]**(1-alpha)/scipy.special.gamma(2-alpha)*(df1[o,p]+I[o,p]/2*ddf1[o,p]) for p in range(dim)]for o in range(dim)])
+	r2=ufl.as_tensor([[I[o,p]**(1-alpha)/scipy.special.gamma(2-alpha)*(df2[o,p]+I[o,p]/2*ddf2[o,p]) for p in range(dim)]for o in range(dim)])
+	return((0.5*(r1+r2))/ufl.sqrt(ufl.inner(0.5*(r1+r2),0.5*(r1+r2))))
 
 def eval_S(sigma_tr,sigma,chi1,chi2,r):
 	i,j,k,l =ufl.indices(4)
@@ -270,3 +271,7 @@ if len(cells)>0:
 if msh.comm.rank==0:
 	np.savetxt("frac_res_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
 	print("DOFs: "+str(num_dofs_global))
+
+with io.XDMFFile(msh.comm, "frac_uh_final.xdmf", "w") as file:
+			file.write_mesh(msh)
+			file.write_function(uh)
