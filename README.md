@@ -1,1 +1,1 @@
-Requirements: fenics-dolfinx, Version 0.7
+Requirements: fenics-dolfinx=0.7, scipy
