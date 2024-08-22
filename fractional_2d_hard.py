@@ -15,11 +15,12 @@ from petsc4py import PETSc
 dim=2
 y0=10000
 mu=55000
-kappa=120000
-k1=10000
-k2=60000
-alpha=0.4
-I=np.array([[100,50],[50,200]])
+kappa=55000
+k1=110000
+k2=110000
+alpha=0.9
+I=np.array([[100,100],[100,200]])
+n_conv=10
 tmax=15000
 steps=200
 eps=math.pow(10,-8)
@@ -45,7 +46,7 @@ def eval_gamma(sigma_tr,sigma,chi1,chi2,r):
 	return(gamma)
 
 #trapezoidal rule of reformulation
-def eval_r(sigma,chi1,chi2):
+'''def eval_r(sigma,chi1,chi2):
 	i,j,k,l,n=ufl.indices(5)
 	ones=ufl.as_tensor([[1 for p in range(dim)] for p in range(dim)])
 	sig1=ufl.as_tensor([[[[ones[o,p]*(sigma[q,r]+chi1[q,r])-I[o,p]*ufl.Identity(dim)[o,q]*ufl.Identity(dim)[p,r] for r in range(dim)] for q in range(dim)] for p in range(dim)] for o in range(dim)])
@@ -64,6 +65,29 @@ def eval_r(sigma,chi1,chi2):
 	r1=ufl.as_tensor([[I[o,p]**(1-alpha)/scipy.special.gamma(2-alpha)*(df1[o,p]+I[o,p]/2*ddf1[o,p]) for p in range(dim)]for o in range(dim)])
 	r2=ufl.as_tensor([[I[o,p]**(1-alpha)/scipy.special.gamma(2-alpha)*(df2[o,p]+I[o,p]/2*ddf2[o,p]) for p in range(dim)]for o in range(dim)])
 	return((0.5*(r1+r2))/ufl.sqrt(ufl.inner(0.5*(r1+r2),0.5*(r1+r2))))
+'''
+#convquad:implicit euler
+def eval_r(sigma,chi1,chi2):
+	h=I/n_conv
+	ws=ufl.as_tensor([scipy.special.gamma(k+1-alpha)/(scipy.special.gamma(1-alpha)*scipy.special.gamma(k+1)) for k in range(n_conv)])
+
+	#i=j=0:
+	hi=ufl.as_tensor(np.array([[h[0,0],0],[0,0]]))
+	dfs=ufl.as_tensor([df(sigma-k*hi,chi1,chi2)[0,0]+df(sigma+k*hi,chi1,chi2)[0,0] for k in range(n_conv)])
+	df1=ufl.inner(dfs,ws)*0.5
+
+	#i=j=1:
+	hi=ufl.as_tensor(np.array([[0,0],[0,h[1,1]]]))
+	dfs=ufl.as_tensor([df(sigma-k*hi,chi1,chi2)[1,1]+df(sigma+k*hi,chi1,chi2)[1,1] for k in range(n_conv)])
+	df2=ufl.inner(dfs,ws)*0.5
+
+	#i=1 j=2:
+	hi=ufl.as_tensor(np.array([[0,h[0,1]],[0,0]]))
+	dfs=ufl.as_tensor([df(sigma-k*hi,chi1,chi2)[0,1]+df(sigma+k*hi,chi1,chi2)[0,1] for k in range(n_conv)])
+	df12=ufl.inner(dfs,ws)*0.5
+
+	r=ufl.as_tensor([[df1*h[0,0]**(1-alpha), df12*h[0,1]**(1-alpha)],[df12*h[0,1]**(1-alpha),df2*h[1,1]**(1-alpha)]])
+	return(r/ufl.sqrt(ufl.inner(r,r)))
 
 def eval_S(sigma_tr,sigma,chi1,chi2,r):
 	i,j,k,l =ufl.indices(4)
