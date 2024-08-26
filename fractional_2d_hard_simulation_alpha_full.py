@@ -104,10 +104,7 @@ for alpha in alphas:
 
 	#mesh
 	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_2.xdmf", "r") as xdmf:
-	    msh = xdmf.read_mesh()
-	#msh = mesh.create_rectangle(comm=MPI.COMM_WORLD,
-	                            #points=((0.0, 0.0), (5.0, 1.0)), n=(64, 64),
-	                            #cell_type=mesh.CellType.triangle)
+		msh = xdmf.read_mesh()
 	bb_tree = geometry.bb_tree(msh, msh.topology.dim)
 	#function space:
 	el=ufl.VectorElement("Lagrange",ufl.triangle,1)
