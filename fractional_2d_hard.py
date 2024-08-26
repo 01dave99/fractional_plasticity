@@ -285,7 +285,7 @@ for ti in time:
 		#	file.write_function(uh)
 
 #evalute deflection in the middle of narrow part
-cells=[]
+'''cells=[]
 cell_candidates=geometry.compute_collisions_points(bb_tree,((2.5,0.25,0)))
 cells=geometry.compute_colliding_cells(msh,cell_candidates,((2.5,0.25,0)))
 if len(cells)>0:
@@ -302,3 +302,4 @@ if msh.comm.rank==0:
 with io.XDMFFile(msh.comm, "frac_uh_final.xdmf", "w") as file:
 			file.write_mesh(msh)
 			file.write_function(uh)
+'''
