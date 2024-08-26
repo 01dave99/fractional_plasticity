@@ -18,7 +18,7 @@ mu=55000
 kappa=55000
 k1=110000
 k2=110000
-alpha=0.9
+alpha=0.999
 I=np.array([[100,100],[100,200]])
 n_conv=10
 tmax=15000
@@ -92,13 +92,16 @@ def eval_r(sigma,chi1,chi2):
 def eval_S(sigma_tr,sigma,chi1,chi2,r):
 	i,j,k,l =ufl.indices(4)
 	id4=ufl.as_tensor(ufl.Identity(dim)[i,k]*ufl.Identity(dim)[j,l],(i,j,k,l))
-	S=id4-ufl.outer(C(r),df(sigma_tr,chi1,chi2))/(ufl.inner(df(sigma_tr,chi1,chi2),C(r))+k1*ufl.inner(df(sigma_tr,chi1,chi2),df(sigma,chi1,chi2))+k2)
+	ddf=(id4-ufl.outer(ufl.Identity(dim),ufl.Identity(dim))/dim)/ufl.sqrt(ufl.inner(ufl.dev(sigma_tr+chi1),ufl.dev(sigma_tr+chi1)))-ufl.outer(ufl.dev(sigma_tr+chi1),ufl.dev(sigma_tr+chi1))/ufl.sqrt(ufl.inner(ufl.dev(sigma_tr+chi1),ufl.dev(sigma_tr+chi1)))**3
+	ddf_prod=ufl.as_tensor(ddf[i,j,k,l]*(2*mu*r[k,l]+k1*df(sigma,chi1,chi2)[k,l]),(i,j))
+	S2=ufl.outer(C(r),f(sigma_tr,chi1,chi2)*ddf_prod)/(ufl.inner(df(sigma_tr,chi1,chi2),C(r))+k1*ufl.inner(df(sigma_tr,chi1,chi2),df(sigma,chi1,chi2))+k2)**2
+	S=id4-ufl.outer(C(r),df(sigma_tr,chi1,chi2))/(ufl.inner(df(sigma_tr,chi1,chi2),C(r))+k1*ufl.inner(df(sigma_tr,chi1,chi2),df(sigma,chi1,chi2))+k2)+S2
 	return(S)
 
 #Finite Element specifications:
 
 #mesh
-with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_4.xdmf", "r") as xdmf:
+with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_2.xdmf", "r") as xdmf:
     msh = xdmf.read_mesh()
 #msh = mesh.create_rectangle(comm=MPI.COMM_WORLD,
                             #points=((0.0, 0.0), (5.0, 1.0)), n=(64, 64),
