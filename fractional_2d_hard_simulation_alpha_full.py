@@ -103,7 +103,7 @@ for alpha in alphas:
 	#Finite Element specifications:
 
 	#mesh
-	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_2.xdmf", "r") as xdmf:
+	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_7.xdmf", "r") as xdmf:
 		msh = xdmf.read_mesh()
 	bb_tree = geometry.bb_tree(msh, msh.topology.dim)
 	#function space:
@@ -307,9 +307,9 @@ for alpha in alphas:
 
 	if msh.comm.rank==0:
 		np.savetxt("frac_res_"+str(num_dofs_global)+"_"+str(alpha)+".csv",residuals,delimiter=",")
-		np.savetxt("defl_mid_"+str(alpha)+".csv",defl_mid,delimiter=",")
-		np.savetxt("defl_right_"+str(alpha)+".csv",defl_right,delimiter=",")
+		np.savetxt("defl_mid_"+str(num_dofs_global)+"_"+str(alpha)+".csv",defl_mid,delimiter=",")
+		np.savetxt("defl_right_"+str(num_dofs_global)+"_"+str(alpha)+".csv",defl_right,delimiter=",")
 
-	with io.XDMFFile(msh.comm, "frac_uh_final_"+str(alpha)+".xdmf", "w") as file:
+	with io.XDMFFile(msh.comm, "frac_uh_final_"+str(num_dofs_global)+"_"+str(alpha)+".xdmf", "w") as file:
 				file.write_mesh(msh)
 				file.write_function(uh)
