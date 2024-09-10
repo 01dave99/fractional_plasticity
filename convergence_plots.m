@@ -9,6 +9,8 @@ resI2=readmatrix("results/frac_res_116642_I2.csv");
 resI3=readmatrix("results/frac_res_116642_I3.csv");
 
 
+
+
 figure(1)
 hold on
 xlabel("$t_n$",Interpreter="latex")
@@ -29,7 +31,16 @@ plot(extract_k(resI2(:,2:end)),LineWidth=1.5)
 plot(extract_k(resI3(:,2:end)),LineWidth=1.5)
 legend(["$\Delta =\left( \matrix{100 & 100 \cr 100 & 200} \right)$","$\Delta =\left( \matrix{1 & 100 \cr 100 & 1000} \right)$", "$\Delta =\left( \matrix{5000 & 5000 \cr 5000 & 5000} \right)$", "$\Delta =\left( \matrix{200 & 100 \cr 100 & 100} \right)$"],Interpreter="latex")
 
-
+shape=size(res5);
+res5=string(res5);
+for i=2:shape(1)
+    for j=1:shape(2)
+        if res5(i,j)=="0"
+            res5(i,j)="";
+        end
+    end
+end
+writematrix(res5(1:6,:),"frac_res_adj.csv")
 
 function k=extract_k(m)
 shape=size(m);
