@@ -40,7 +40,7 @@ for i=2:shape(1)
         end
     end
 end
-writematrix(res5(1:6,:),"frac_res_adj.csv")
+writematrix(res5(1:6,:),"results/frac_res_adj.csv")
 
 function k=extract_k(m)
 shape=size(m);

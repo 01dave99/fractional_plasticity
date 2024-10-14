@@ -1,6 +1,7 @@
 import numpy as np
 import scipy
 import math
+from IPython import embed
 
 
 import ufl
@@ -298,8 +299,4 @@ if len(cells)>0:
 if msh.comm.rank==0:
 	np.savetxt("frac_res_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
 	print("DOFs: "+str(num_dofs_global))
-
-with io.XDMFFile(msh.comm, "frac_uh_final.xdmf", "w") as file:
-			file.write_mesh(msh)
-			file.write_function(uh)
 '''
