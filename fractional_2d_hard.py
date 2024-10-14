@@ -19,7 +19,7 @@ mu=55000
 kappa=55000
 k1=110000
 k2=110000
-alpha=0.999
+alpha=0.5
 I=np.array([[100,100],[100,200]])
 n_conv=10
 tmax=15000
@@ -102,7 +102,7 @@ def eval_S(sigma_tr,sigma,chi1,chi2,r):
 #Finite Element specifications:
 
 #mesh
-with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_2.xdmf", "r") as xdmf:
+with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_11.xdmf", "r") as xdmf:
     msh = xdmf.read_mesh()
 #msh = mesh.create_rectangle(comm=MPI.COMM_WORLD,
                             #points=((0.0, 0.0), (5.0, 1.0)), n=(64, 64),
