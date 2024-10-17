@@ -103,7 +103,7 @@ for alpha in alphas:
 	#Finite Element specifications:
 
 	#mesh
-	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_7.xdmf", "r") as xdmf:
+	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_11.xdmf", "r") as xdmf:
 		msh = xdmf.read_mesh()
 	bb_tree = geometry.bb_tree(msh, msh.topology.dim)
 	#function space:
@@ -115,6 +115,7 @@ for alpha in alphas:
 	num_dofs_global = V.dofmap.index_map.size_global * V.dofmap.index_map_bs
 	if msh.comm.rank==0:
 		print(num_dofs_global,flush=True)
+		print("alpha: "+str(alpha),flush=True)
 	Vstr=fem.functionspace(msh,elstr)
 	Vsca=fem.functionspace(msh,elsca)
 

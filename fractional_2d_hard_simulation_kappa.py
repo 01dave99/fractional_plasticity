@@ -15,9 +15,9 @@ from petsc4py import PETSc
 dim=2
 y0=10000
 mu=55000
-kappas=[55000]
-k1=110
-k2=110
+kappa=55000
+k1s=[110,1100]
+k2=1100
 alpha=0.5
 I=np.array([[100,100],[100,200]])
 n_conv=10
@@ -26,8 +26,8 @@ steps=200
 eps=math.pow(10,-8)
 
 
-for kappa in kappas:
-
+for k1 in k1s:
+	k2=k1
 	#Specification of return mapping
 
 	def f(sigma,chi1,chi2):
@@ -103,7 +103,7 @@ for kappa in kappas:
 	#Finite Element specifications:
 
 	#mesh
-	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_7.xdmf", "r") as xdmf:
+	with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_11.xdmf", "r") as xdmf:
 		msh = xdmf.read_mesh()
 	bb_tree = geometry.bb_tree(msh, msh.topology.dim)
 	#function space:
@@ -309,9 +309,9 @@ for kappa in kappas:
 			defl_right[ti]=ydefl
 
 	if msh.comm.rank==0:
-		np.savetxt("results/frac_res_"+str(num_dofs_global)+"_ks_110_kappa_"+str(kappa)+".csv",residuals,delimiter=",")
-		np.savetxt("results/defl_mid_"+str(num_dofs_global)+"_ks_110_kappa_"+str(kappa)+".csv",defl_mid,delimiter=",")
-		np.savetxt("results/defl_right_"+str(num_dofs_global)+"_ks_110_kappa_"+str(kappa)+".csv",defl_right,delimiter=",")
+		np.savetxt("results/frac_res_"+str(num_dofs_global)+"_ks_"+str(k1)+".csv",residuals,delimiter=",")
+		np.savetxt("results/defl_mid_"+str(num_dofs_global)+"_ks_"+str(k1)+".csv",defl_mid,delimiter=",")
+		np.savetxt("results/defl_right_"+str(num_dofs_global)+"_ks_"+str(k1)+".csv",defl_right,delimiter=",")
 
 	'''with io.XDMFFile(msh.comm, "frac_uh_final_"+str(num_dofs_global)+"_"+str(alpha)+".xdmf", "w") as file:
 				file.write_mesh(msh)

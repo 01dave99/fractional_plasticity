@@ -26,7 +26,7 @@ tmax=15000
 steps=200
 eps=math.pow(10,-8)
 
-with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_7.xdmf", "r") as xdmf:
+with io.XDMFFile(MPI.COMM_WORLD, "meshes/mesh2d_11.xdmf", "r") as xdmf:
 	    msh = xdmf.read_mesh()
 
 
