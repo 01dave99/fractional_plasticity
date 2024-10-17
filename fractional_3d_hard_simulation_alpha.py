@@ -20,7 +20,7 @@ k1=200000
 k2=200000
 alpha=0.5
 n_conv=10
-I=np.array([[100,100,100],[100,200,100],[100,100,300]])
+I=np.array([[100,100,100],[100,500,100],[100,100,900]])
 tmax=5000
 steps=200
 eps=math.pow(10,-8)
@@ -158,6 +158,7 @@ t2vec=np.zeros(steps)
 time=range(steps)
 
 residuals=np.zeros((1000,steps))
+sig_eqs=np.zeros(steps)
 
 u=ufl.TrialFunction(V)
 v=ufl.TestFunction(V)
@@ -171,6 +172,7 @@ chi1_old=fem.Function(Vstr)
 chi2=fem.Function(Vsca)
 chi2_old=fem.Function(Vsca)
 sigma_old=fem.Function(Vstr)
+sigma_eq=fem.Function(Vsca) #equivalent von_mises stress
 ds=ufl.Measure("ds",domain=msh,subdomain_data=facet_tag)
 
 for ti in time:
@@ -294,15 +296,24 @@ for ti in time:
         chi1.interpolate(chi1exp)
         chi2.interpolate(chi2exp)
         sigma_old.interpolate(sigmaexp)
-        
-        #with io.XDMFFile(msh.comm, "frac_uh"+str(ti+1)+".xdmf", "w") as file:
-        #	file.write_mesh(msh)
-        #	file.write_function(uh)
+    
+    sigmaeqexp=fem.Expression(ufl.sqrt(ufl.inner(ufl.dev(sigma),ufl.dev(sigma))),Vsca.element.interpolation_points())
+    sigma_eq.interpolate(sigmaeqexp)
+    
+    #maximal equivalent stress
+    sig_eqs[ti]=msh.comm.allreduce(np.max(sigma_eq.x.array[:]),MPI.MAX)
+    if msh.comm.rank==0:
+          print("Max_eq_stress: "+str(sig_eqs[ti]),flush=True)
+          
 
-#if msh.comm.rank==0:
-#    np.savetxt("results/frac_res3d_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
-#    print("DOFs: "+str(num_dofs_global))
+if msh.comm.rank==0:
+    np.savetxt("results/frac_res3d_"+str(num_dofs_global)+".csv",residuals,delimiter=",")
+    np.savetxt("results/sig_eq3d_"+str(num_dofs_global)+".csv",sig_eqs,delimiter=",")
 
 with io.XDMFFile(msh.comm, "3d_test_"+str(num_dofs_global)+".xdmf", "w") as file:
             file.write_mesh(msh)
             file.write_function(uh)
+
+with io.XDMFFile(msh.comm,"3d_test_"+str(num_dofs_global)+"_stress.xdmf","w") as file:
+    file.write_mesh(msh)
+    file.write_function(sigma_old)
