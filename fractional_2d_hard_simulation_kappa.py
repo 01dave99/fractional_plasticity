@@ -309,9 +309,9 @@ for kappa in kappas:
 			defl_right[ti]=ydefl
 
 	if msh.comm.rank==0:
-		np.savetxt("frac_res_"+str(num_dofs_global)+"_ks_110_kappa_"+str(kappa)+".csv",residuals,delimiter=",")
-		np.savetxt("defl_mid_"+str(num_dofs_global)+"_ks_110_kappa_"+str(kappa)+".csv",defl_mid,delimiter=",")
-		np.savetxt("defl_right_"+str(num_dofs_global)+"_ks_110_kappa_"+str(kappa)+".csv",defl_right,delimiter=",")
+		np.savetxt("results/frac_res_"+str(num_dofs_global)+"_ks_110_kappa_"+str(kappa)+".csv",residuals,delimiter=",")
+		np.savetxt("results/defl_mid_"+str(num_dofs_global)+"_ks_110_kappa_"+str(kappa)+".csv",defl_mid,delimiter=",")
+		np.savetxt("results/defl_right_"+str(num_dofs_global)+"_ks_110_kappa_"+str(kappa)+".csv",defl_right,delimiter=",")
 
 	'''with io.XDMFFile(msh.comm, "frac_uh_final_"+str(num_dofs_global)+"_"+str(alpha)+".xdmf", "w") as file:
 				file.write_mesh(msh)
