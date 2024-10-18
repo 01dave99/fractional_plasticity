@@ -2,7 +2,7 @@ import meshio
 import gmsh
 import pygmsh
 
-mesh_size=0.1
+mesh_size=0.015
 geom=pygmsh.occ.Geometry()
 
 model3D=geom.__enter__()
