@@ -315,10 +315,11 @@ for alpha in alphas:
             cells=cells[0]
             ydefl=uh.eval(((3,0.5,0.5)),cells)[1]
             defl_right[ti]=ydefl
+            print("Deflection_right: "+str(ydefl),flush=True)
 
         defl_right[ti]=msh.comm.allreduce(defl_right[ti],MPI.SUM)
         if msh.comm.rank==0:
-            print("Deflection_right: "+str(ydefl),flush=True)
+            print("Deflection_right: "+str(defl_right[ti]),flush=True)
 
     if msh.comm.rank==0:
         np.savetxt("results/frac_res3d_"+str(num_dofs_global)+"_alpha_"+str(alpha)+".csv",residuals,delimiter=",")
