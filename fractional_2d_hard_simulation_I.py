@@ -276,8 +276,11 @@ for I in Is:
 		if len(cells)>0:
 			cells=cells[0]
 			ydefl=uh.eval(((2.5,0.25,0)),cells)[1]
-			print("Deflection_mid: "+str(ydefl),flush=True)
 			defl_mid[ti]=ydefl
+		
+		defl_mid[ti]=msh.comm.allreduce(defl_mid[ti],MPI.SUM)
+		if msh.comm.rank==0:
+			print("Deflection_mid: "+str(defl_mid[ti]),flush=True)
 
 		#evaluate deflection at the right side of beam
 		cells=[]
@@ -286,8 +289,11 @@ for I in Is:
 		if len(cells)>0:
 			cells=cells[0]
 			ydefl=uh.eval(((5,0.5,0)),cells)[0]
-			print("Deflection_right: "+str(ydefl),flush=True)
 			defl_right[ti]=ydefl
+			
+		defl_right[ti]=msh.comm.allreduce(defl_right[ti],MPI.SUM)
+		if msh.comm.rank==0:
+			print("Deflection_right: "+str(defl_right[ti]),flush=True)
 
 	if msh.comm.rank==0:
 		np.savetxt("results/frac_res_"+str(num_dofs_global)+"_I"+str(I_count)+".csv",residuals,delimiter=",")

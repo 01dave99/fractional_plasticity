@@ -14,8 +14,8 @@ from petsc4py import PETSc
 
 dim=3
 y0=50000
-mu=70000
-kappa=55000
+mu=120000
+kappa=80000
 k1=200000
 k2=200000
 alphas= [0.5,0.7,0.9,0.99]
@@ -314,14 +314,16 @@ for alpha in alphas:
         if len(cells)>0:
             cells=cells[0]
             ydefl=uh.eval(((3,0.5,0.5)),cells)[1]
-            print("Deflection_right: "+str(ydefl),flush=True)
             defl_right[ti]=ydefl
-            
+
+        defl_right[ti]=msh.comm.allreduce(defl_right[ti],MPI.SUM)
+        if msh.comm.rank==0:
+            print("Deflection_right: "+str(ydefl),flush=True)
 
     if msh.comm.rank==0:
         np.savetxt("results/frac_res3d_"+str(num_dofs_global)+"_alpha_"+str(alpha)+".csv",residuals,delimiter=",")
         np.savetxt("results/sig_eq3d_"+str(num_dofs_global)+"_alpha_"+str(alpha)+".csv",sig_eqs,delimiter=",")
-        np.savetxt("results/defl_right_"+str(num_dofs_global)+"_alpha_"+str(alpha)+".csv",defl_right,delimiter=",")
+        np.savetxt("results/defl_right3d_"+str(num_dofs_global)+"_alpha_"+str(alpha)+".csv",defl_right,delimiter=",")
 
     with io.XDMFFile(msh.comm, "results/3d_test_"+str(num_dofs_global)+"_alpha_"+str(alpha)+".xdmf", "w") as file:
                 file.write_mesh(msh)

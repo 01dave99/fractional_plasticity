@@ -18,7 +18,7 @@ mu=55000
 kappa=55000
 k1=110000
 k2=110000
-alphas=[0.5,0.7,0.9,0.99]
+alphas=[0.7,0.9,0.99]
 I=np.array([[100,100],[100,200]])
 n_conv=10
 tmax=15000
@@ -293,8 +293,11 @@ for alpha in alphas:
 		if len(cells)>0:
 			cells=cells[0]
 			ydefl=uh.eval(((2.5,0.25,0)),cells)[1]
-			print("Deflection_mid: "+str(ydefl),flush=True)
 			defl_mid[ti]=ydefl
+		
+		defl_mid[ti]=msh.comm.allreduce(defl_mid[ti],MPI.SUM)
+		if msh.comm.rank==0:
+			print("Deflection_mid: "+str(defl_mid[ti]),flush=True)
 
 		#evaluate deflection at the right side of beam
 		cells=[]
@@ -303,8 +306,11 @@ for alpha in alphas:
 		if len(cells)>0:
 			cells=cells[0]
 			ydefl=uh.eval(((5,0.5,0)),cells)[0]
-			print("Deflection_right: "+str(ydefl),flush=True)
 			defl_right[ti]=ydefl
+			
+		defl_right[ti]=msh.comm.allreduce(defl_right[ti],MPI.SUM)
+		if msh.comm.rank==0:
+			print("Deflection_right: "+str(defl_right[ti]),flush=True)
 
 	if msh.comm.rank==0:
 		np.savetxt("results/frac_res_"+str(num_dofs_global)+"_"+str(alpha)+".csv",residuals,delimiter=",")
